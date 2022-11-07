@@ -1,8 +1,9 @@
 from utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI
-
-from routers import foo
+import logging
+from routers import foo,redditRouter
 from config.database import create_tables
+from logger import init_logging
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -14,6 +15,9 @@ from utils.request_exceptions import (
 from utils.app_exceptions import app_exception_handler
 
 create_tables()
+# setup loggers
+init_logging()
+
 
 
 app = FastAPI()
@@ -35,6 +39,7 @@ async def custom_app_exception_handler(request, e):
 
 
 app.include_router(foo.router)
+app.include_router(redditRouter.router)
 
 
 @app.get("/")
