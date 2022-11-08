@@ -1,10 +1,10 @@
 from schemas.foo import FooItemCreate
 from utils.app_exceptions import AppException
-
 from models.foo import FooItem
 from utils.service_result import ServiceResult
-
 import openai
+openai.organization = "org-deLI2GByWsNO21i26Eycocxs"
+openai.api_key = "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"
 MODEL = "text-similarity-babbage-001"
 
 class GPT3Service():

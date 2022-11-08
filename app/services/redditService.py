@@ -3,7 +3,7 @@ from utils.app_exceptions import AppException
 import asyncpraw
 from services.main import AppService, AppCRUD
 from services.gpt3Service import GPT3Service
-from services.pineconeService import PineConeService
+from services.pineConeService import PineConeService
 from models.foo import FooItem
 from models.redditmodels import RedditMessage,Subreddit
 from utils.service_result import ServiceResult
@@ -21,98 +21,75 @@ MODEL = "text-similarity-babbage-001"
 class RedditService(AppService):
 
     async def get_new(self) -> ServiceResult:
-        index = PineConeService.get_or_create_index("openai")
+        index = PineConeService.get_or_create_index("openai",dim=2048)
+        vectorCount = 0
+        dbCount = 0 
 
         subreddits = RedditCRUD(self.db).get_items()
-        for subreddit in subreddits:
-            
-            existing = RedditCRUD(self.db).getExistingMessages(subreddit.ext_id)
-            sub = await reddit.subreddit("SaaS")
-            
-            async for submission in sub.new(limit=2):
-                submissions = []
+        for subreddit in subreddits: 
+            existing = self.getExistingMessages(subredditId=subreddit.ext_id)
+            submissions = []
+            newMessages = []
+            sub = await reddit.subreddit(subreddit.search_name)
+            async for submission in sub.new(limit=3):
                 if submission.id not in existing:
                     submissions.append(submission)
+                    newMessages.append(RedditMessage( 
+                                reddit_id = submission.id,
+                                channel_id = subreddit.ext_id,
+                                channel_name = subreddit.search_name,
+                                title = submission.title,
+                                self_text = submission.selftext,
+                                url = submission.url,
+                                score = submission.score,
+                     ))
+            if len(submissions) > 0:
+                ids_batch = [submission.id for submission in submissions]   
+                lines_batch = [submission.title for submission in submissions]
+                embeds = GPT3Service.get_batch_embeddings(batch=lines_batch)
+                meta = [{"text":submission.title} for submission in submissions]
 
-                    ids_batch = [submission.id for submission in submissions]   
-                    lines_batch = [submission.title for submission in submissions]
-                    res = openai.Embedding.create(input=lines_batch, engine=MODEL)
-                    embeds = [record['embedding'] for record in res['data']]
-                    meta = [{"text":submission.title} for submission in submissions]
+                to_upsert = zip(ids_batch, embeds, meta)
+                pineConeCount = index.upsert(vectors= list(to_upsert),
+                                                 namespace=subreddit.ext_id)  #upsert to Pinecone
+                logger.info( "items added to pineCone")
+                RedditCRUD(self.db).batch_create_messages(newMessages=newMessages)
 
-                    to_upsert = zip(ids_batch, embeds, meta)
-                    #upsert to Pinecone
-                    count = index.upsert(vectors=list(to_upsert))
-                    count = count.upserted_count
-                    item = RedditMessage( 
-                        reddit_id = submission.id,
-                        channel_id = subreddit.id,
-                        channel_name = subreddit.search_name,
-                        title = submission.title,
-                        self_text = submission.selftext,
-                        url = submission.url,
-                        score = submission.score,
-                    )
-                
-                    self.db.add(item)
-                    self.db.commit()
-                    self.db.refresh(item)
-                #res = RedditService.build_message_List(submissions=submissions,subredditId=subreddit.id,subredditSearchName=subreddit.search_name)
+                vectorCount += pineConeCount.upserted_count
+    
         reddit_job = {
             "message": "Done",
-            "count": count
+            "vectorCount": vectorCount,
+            "dbCount": 0
         }
         if not reddit_job:
-            return ServiceResult(AppException.FooCreateItem())
+            return ServiceResult(AppException.getNew())
         return ServiceResult(reddit_job)
-        
-    def build_message_List(self, submissions:list,subredditId:str,subredditSearchName:str) -> list:
-        objects = []
-        for sub in submissions:
-            objects.append(RedditMessage( 
-                reddit_id = sub.id,
-                channel_id = subredditId,
-                channel_name = subredditSearchName,
-                title = sub.title,
-                self_text = sub.self_text,
-                url = sub.url,
-                score = sub.score)
-            )
-        return objects
 
 
+    def build_message(submission,subreddit) -> RedditMessage:
+        item = RedditMessage( 
+                    reddit_id = submission.id,
+                    channel_id = subreddit.ext_id,
+                    channel_name = subreddit.search_name,
+                    title = submission.title,
+                    self_text = submission.selftext,
+                    url = submission.url,
+                    score = submission.score,
+                )
+        return item
 
-    def create_item(self, item: FooItemCreate) -> ServiceResult:
-        foo_item = FooCRUD(self.db).create_item(item)
-        if not foo_item:
-            return ServiceResult(AppException.FooCreateItem())
-        return ServiceResult(foo_item)
-
-    def get_item(self, item_id: int) -> ServiceResult:
-        foo_item = FooCRUD(self.db).get_item(item_id)
-        if not foo_item:
-            return ServiceResult(AppException.FooGetItem({"item_id": item_id}))
-        if not foo_item.public:
-            return ServiceResult(AppException.FooItemRequiresAuth())
-        return ServiceResult(foo_item)
-
-
+    def getExistingMessages(self,subredditId):
+        ids = []
+        res = RedditCRUD(self.db).getExistingOnSubreddit(subredditId=subredditId)
+        for x in res:
+            ids.append(x.reddit_id)
+        return ids
 
 class RedditCRUD(AppCRUD):
-    def create_message(self, item: RedditMessage) -> RedditMessage:
-        foo_item = FooItem(description=item.description, public=item.public)
-        self.db.add(foo_item)
+    def batch_create_messages(self, newMessages):
+        self.db.add_all(newMessages)
         self.db.commit()
-        self.db.refresh(foo_item)
-        return foo_item
-    
-    def create_messages(self, item: list) -> list:
-        self.db.add(item)
-        self.db.commit()
-        self.db.refresh(item)
-        return
-
-
 
     def get_items(self) -> RedditMessage:
         subreddits = self.db.query(Subreddit).all()
@@ -120,12 +97,12 @@ class RedditCRUD(AppCRUD):
             return subreddits
         return None
 
-    def getExistingMessages(self,subredditId):
-        ids = []
+    def getExistingOnSubreddit(self,subredditId):
         res = self.db.query(RedditMessage).filter(RedditMessage.channel_id == subredditId)
-        for x in res:
-            ids.append(x.reddit_id)
-        return ids
+        if res:
+            return res
+        return None
+
 
 
 

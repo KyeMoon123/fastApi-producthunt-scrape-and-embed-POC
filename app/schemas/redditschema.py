@@ -16,7 +16,8 @@ class RedditMessage(BaseModel):
 
 class RedditFetchBatchResponse(BaseModel):
     message: str
-    count: int
+    vectorCount: int
+    dbCount: int
 
     class Config:
         orm_mode = True        
