@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class RedditMessage(BaseModel):
     id: int
     reddit_id: str
@@ -14,10 +15,10 @@ class RedditMessage(BaseModel):
     class Config:
         orm_mode = True
 
+
 class RedditFetchBatchResponse(BaseModel):
     message: str
     vectorCount: int
-    dbCount: int
 
     class Config:
-        orm_mode = True        
+        orm_mode = True

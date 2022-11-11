@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends
-
-from services.foo import FooService
-from schemas.foo import FooItem, FooItemCreate
-
-from utils.service_result import handle_result
+from schemas.foo import FooItem
 
 from config.database import get_db
+from utils.service_result import handle_result
 
 router = APIRouter(
     prefix="/foo",
@@ -13,11 +10,6 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-
-@router.post("/item/", response_model=FooItem)
-async def create_item(item: FooItemCreate, db: get_db = Depends()):
-    result = FooService(db).create_item(item)
-    return handle_result(result)
 
 
 @router.get("/item/{item_id}", response_model=FooItem)

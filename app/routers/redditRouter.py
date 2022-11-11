@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends
-
 from services.redditService import RedditService
-from schemas.redditschema import RedditMessage
-from schemas.redditschema import RedditFetchBatchResponse
-import openai
+from schemas.redditschema import RedditMessage, RedditFetchBatchResponse
 from utils.service_result import handle_result
 
 from config.database import get_db
@@ -16,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/getnew/", response_model=RedditFetchBatchResponse)
-async def get_new( db: get_db = Depends()):
+async def get_new(db: get_db = Depends()):
     result = await RedditService(db).get_new()
     return handle_result(result)
 

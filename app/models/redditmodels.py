@@ -2,6 +2,7 @@ from sqlalchemy import Boolean, Column, Integer, String
 
 from config.database import Base
 
+
 class RedditMessage(Base):
     __tablename__ = "reddit_messages"
 
@@ -13,7 +14,8 @@ class RedditMessage(Base):
     self_text = Column(String)
     url = Column(String)
     score = Column(Integer)
-    
+
+
 class Subreddit(Base):
     __tablename__ = "subreddit"
 
