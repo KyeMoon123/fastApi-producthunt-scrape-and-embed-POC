@@ -22,3 +22,11 @@ class RedditFetchBatchResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SemanticQueryBody(BaseModel):
+    subreddits: list = [str]
+    query:  str
+
+    class Config:
+        orm_mode = True

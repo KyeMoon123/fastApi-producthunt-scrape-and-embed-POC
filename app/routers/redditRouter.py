@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from services.redditService import RedditService
+from services.RedditService import RedditService
 from schemas.redditschema import RedditMessage, RedditFetchBatchResponse
 from utils.service_result import handle_result
 

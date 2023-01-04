@@ -11,7 +11,7 @@ class PineConeService:
     @staticmethod
     def get_or_create_index(index: str, **kwargs):
         if index not in pinecone.list_indexes():
-            pinecone.create_index(index, dimension=kwargs.get("dim", None))
+            pinecone.create_index(index, dimension=2048)
         return pinecone.Index(index)
 
     # currently no limit on batch size, if needed make 100 (recommender limit)

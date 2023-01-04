@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 from services.TopicQueryService import TopicQueryService
+from schemas.redditschema import SemanticQueryBody
+from fastapi import Response
 
 router = APIRouter(
     prefix="/topic_query",
@@ -8,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.post("/query/")
-async def semantic_search(query: str, ):
-    result = await TopicQueryService.query(query)
+@router.post("/recommended/")
+async def semantic_search(input: SemanticQueryBody):
+    result = await TopicQueryService.query(query=input.query, subredditInputList=input.subreddits)
     return result

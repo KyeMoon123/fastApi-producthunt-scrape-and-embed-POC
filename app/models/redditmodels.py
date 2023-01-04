@@ -4,7 +4,7 @@ from config.database import Base
 
 
 class RedditMessage(Base):
-    __tablename__ = "reddit_messages"
+    __tablename__ = "RedditMessages"
 
     id = Column(Integer, primary_key=True, index=True)
     reddit_id = Column(String)
@@ -17,7 +17,7 @@ class RedditMessage(Base):
 
 
 class Subreddit(Base):
-    __tablename__ = "subreddit"
+    __tablename__ = "Subreddit"
 
     id = Column(Integer, primary_key=True, index=True)
     channel_name = Column(String)

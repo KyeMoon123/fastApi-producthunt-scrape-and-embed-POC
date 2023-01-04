@@ -5,8 +5,8 @@ from typing import List
 from utils.app_exceptions import AppException
 import asyncpraw
 
-from services.gpt3Service import GPT3Service
-from services.pineConeService import PineConeService
+from services.GPT3Service import GPT3Service
+from services.PineConeService import PineConeService
 from services.main import AppService, AppCRUD
 from models.redditmodels import RedditMessage, Subreddit
 from utils.service_result import ServiceResult
