@@ -5,7 +5,6 @@ from utils.app_exceptions import AppExceptionCase
 from fastapi import FastAPI
 from config.database import create_tables
 from logger import init_logging
-from sqlalchemy import event
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException

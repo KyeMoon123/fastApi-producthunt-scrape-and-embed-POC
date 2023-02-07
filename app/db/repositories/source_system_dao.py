@@ -5,24 +5,25 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
-from db.models.message_model import MessageModel
+from db.models.dummy_model import DummyModel
+from db.models.source_system import SourceSystem
 
 
-class MessageDAO:
+class SourceSystemDAO:
     """Class for accessing dummy table."""
 
     def __init__(self, session: AsyncSession = Depends(get_db)):
         self.session = session
 
-    async def create_dummy_model(self, name: str) -> None:
+    async def create_source(self, name: str) -> None:
         """
         Add single dummy to session.
 
         :param name: name of a dummy.
         """
-        self.session.add(MessageModel())
+        self.session.add(SourceSystem(system_name=name))
 
-    async def get_all_dummies(self, limit: int, offset: int) -> List[MessageModel]:
+    async def get_all_dummies(self, limit: int, offset: int) -> List[DummyModel]:
         """
         Get all dummy models with limit/offset pagination.
 
@@ -31,23 +32,34 @@ class MessageDAO:
         :return: stream of dummies.
         """
         raw_dummies = await self.session.execute(
-            select(MessageModel).limit(limit).offset(offset),
+            select(DummyModel).limit(limit).offset(offset),
         )
 
         return raw_dummies.scalars().fetchall()
 
+    async def find_by_system_name(self, system_name: str) -> SourceSystem:
+        """
+        Get all dummy models with limit/offset pagination.
+        :param system_name: limit of dummies.
+        :return: stream of dummies.
+        """
+        system = await self.session.execute(
+            select(SourceSystem).filter_by(system_name=system_name),
+        )
+        return system.
+
     async def filter(
-        self,
-        name: Optional[str] = None,
-    ) -> List[MessageModel]:
+            self,
+            name: Optional[str] = None,
+    ) -> List[DummyModel]:
         """
         Get specific dummy model.
 
         :param name: name of dummy instance.
         :return: dummy models.
         """
-        query = select(MessageModel)
+        query = select(DummyModel)
         if name:
-            query = query.where(MessageModel.name == name)
+            query = query.where(DummyModel.name == name)
         rows = await self.session.execute(query)
         return rows.scalars().fetchall()
