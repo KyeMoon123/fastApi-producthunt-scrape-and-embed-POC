@@ -5,24 +5,19 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.database import get_db
-from db.models.dummy_model import DummyModel
+from db.models.mention_model import MentionModel
+from db.models.mention_model import MentionModel
 
 
-class DummyDAO:
+class MentionDAO:
     """Class for accessing dummy table."""
 
     def __init__(self, session: AsyncSession = Depends(get_db)):
         self.session = session
 
-    async def create_dummy_model(self, name: str) -> None:
-        """
-        Add single dummy to session.
 
-        :param name: name of a dummy.
-        """
-        self.session.add(DummyModel(name=name))
 
-    async def get_all_dummies(self, limit: int, offset: int) -> List[DummyModel]:
+    async def get_all_dummies(self, limit: int, offset: int) -> List[MentionModel]:
         """
         Get all dummy models with limit/offset pagination.
 
@@ -31,23 +26,23 @@ class DummyDAO:
         :return: stream of dummies.
         """
         raw_dummies = await self.session.execute(
-            select(DummyModel).limit(limit).offset(offset),
+            select(MentionModel).limit(limit).offset(offset),
         )
 
         return raw_dummies.scalars().fetchall()
 
     async def filter(
-        self,
-        name: Optional[str] = None,
-    ) -> List[DummyModel]:
+            self,
+            name: Optional[str] = None,
+    ) -> List[MentionModel]:
         """
         Get specific dummy model.
 
         :param name: name of dummy instance.
         :return: dummy models.
         """
-        query = select(DummyModel)
+        query = select(MentionModel)
         if name:
-            query = query.where(DummyModel.name == name)
+            query = query.where(MentionModel.name == name)
         rows = await self.session.execute(query)
         return rows.scalars().fetchall()
