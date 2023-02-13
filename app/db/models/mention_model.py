@@ -16,4 +16,4 @@ class MentionModel(Base):
     external_id = Column(String)
     source_id = Column(Integer, ForeignKey("source_system.id"))
     full_text = Column(String)
-    user_id = Column(Integer, ForeignKey("external_system_user_details.id"))
+    user_id = Column(Integer)

@@ -10,7 +10,7 @@ from db.models.mention_model import MentionModel
 from services.main import BaseService, BaseCRUD
 
 
-class MentionsService(BaseService):
+class TwitterService(BaseService):
 
     def get_new_twitter_mentions(self, company_name, company_twitter_handle):
         query = self.build_query(company_name, company_twitter_handle)
