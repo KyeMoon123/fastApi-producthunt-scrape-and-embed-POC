@@ -20,3 +20,4 @@ class BaseCRUD(DBSessionContext):
             self.db.add(instance)
             self.db.commit()
             return instance
+

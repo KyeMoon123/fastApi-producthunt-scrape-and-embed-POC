@@ -46,7 +46,7 @@ class SourceSystemDAO:
         system = await self.session.execute(
             select(SourceSystem).filter_by(system_name=system_name),
         )
-        return system.
+        return 1
 
     async def filter(
             self,
