@@ -1,11 +1,9 @@
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+import sys
+
+sys.path.append('/app')
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String
-from db.models.source_system import SourceSystem
-from db.models.external_system_user_details import ExternalSystemUserDetailsModel
-
 from config.database import Base
-
 
 class MentionModel(Base):
     """Model for demo purpose."""
