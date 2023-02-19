@@ -6,9 +6,6 @@ import sys
 
 from sqlalchemy.ext.declarative import declarative_base
 
-
-
-sys.path.append('/fictional-carnival/app')
 # useful for handling different item types with a single interface
 from services.main import BaseCRUD
 from scrapy.utils.project import get_project_settings

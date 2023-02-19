@@ -9,7 +9,7 @@ from scrapy.loader import ItemLoader
 from ..items import ProducthuntReviewItem
 
 API = '55ee7a6b8c6644bb0c01cd93ed246548'
-product = "mindsdb"
+product = "webwave"
 
 def get_url(url):
     """

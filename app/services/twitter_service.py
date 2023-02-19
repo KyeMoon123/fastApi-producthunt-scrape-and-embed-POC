@@ -14,7 +14,7 @@ class TwitterService(BaseService):
 
     def get_new_twitter_mentions(self, company_name, company_twitter_handle):
         query = self.build_query(company_name, company_twitter_handle)
-        tweets = tweepy.Cursor(twitterApi.search_tweets, q=query, lang="en", tweet_mode="extended", count=20).items(20)
+        tweets = tweepy.Cursor(twitterApi.search_tweets, q=query, lang="en", tweet_mode="extended", count=50).items(50)
         new_mentions = [
             self.build_new_mention(tweet) for tweet in tweets
         ]  # probably redundant building this here.
