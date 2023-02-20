@@ -5,7 +5,7 @@
 import sys
 
 from sqlalchemy.ext.declarative import declarative_base
-
+sys.path.append('/app')
 # useful for handling different item types with a single interface
 from services.main import BaseCRUD
 from scrapy.utils.project import get_project_settings
@@ -16,8 +16,6 @@ from db.models.mention_model import MentionModel
 from db.models.external_system_user_details import ExternalSystemUserDetailsModel
 
 Base = declarative_base()
-
-
 class ProducthuntscraperPipeline(BaseCRUD):
     def __init__(self):
         """
@@ -43,7 +41,7 @@ class ProducthuntscraperPipeline(BaseCRUD):
         mention.external_id = item["external_id"][0]
         mention.source_id = 2,
         mention.full_text = item["full_text"][0]
-        mention.user_id = item["user_id"][0]
+        mention.external_user_id = item["user_id"][0]
 
         try:
             query = select(ExternalSystemUserDetailsModel).filter_by(external_id=user.external_id)

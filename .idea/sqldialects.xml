@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/app/alembic/versions/60f1581a7a82_add_isNew_column_mention.py" dialect="GenericSQL" />
+  </component>
+</project>

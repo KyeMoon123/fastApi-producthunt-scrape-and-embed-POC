@@ -18,6 +18,7 @@ Base = declarative_base()
 from .external_system_user_details import ExternalSystemUserDetailsModel
 from .source_system import SourceSystem
 from .mention_model import MentionModel
+from .user import User
 
 
 def get_db() -> Iterator[Session]:
