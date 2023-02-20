@@ -3,10 +3,9 @@ from typing import List
 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
-sys.path.append('/app')
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String, Boolean
-from config.database import Base
+from app.config.database import Base
 
 
 class MentionModel(Base):

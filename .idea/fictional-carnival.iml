@@ -14,12 +14,13 @@
       <sourceFolder url="file://$MODULE_DIR$/app/static" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/utils" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/alembic" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/docs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/echo" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/monitoring" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/product_hunt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/twitter" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (fictional-carnival)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-  <component name="PyDocumentationSettings">
-    <option name="format" value="GOOGLE" />
-    <option name="myDocStringFormat" value="Google" />
   </component>
 </module>

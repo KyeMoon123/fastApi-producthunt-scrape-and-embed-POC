@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship, mapped_column, Mapped
 from sqlalchemy.sql.schema import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String
 
-from config.database import Base
+from app.config.database import Base
 
 
 class User(Base):
