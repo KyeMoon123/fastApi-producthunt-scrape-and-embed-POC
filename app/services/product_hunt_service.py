@@ -23,7 +23,6 @@ class ProductHuntService(BaseService):
 
         if request.status_code == 200:
             product_hunt_post = ProductHuntPostResponse.parse_obj(request.json())
-
             new_mentions = self.build_new_mentions(product_hunt_post.data.post)
             new_users = self.build_new_users(product_hunt_post.data.post.comments)
 
@@ -70,10 +69,10 @@ class ProductHuntService(BaseService):
     @staticmethod
     def build_new_mentions(post):
         new_mentions = [MentionModel(
-            external_id=post.id,
-            source_id=2,
+            external_id=comment.node.id,
+            source_system_id=2,
             full_text=comment.node.body,
-            user_id=comment.node.user.id
+            external_user_id=comment.node.user.id
         ) for comment in post.comments.edges]
         return new_mentions
 
@@ -81,7 +80,7 @@ class ProductHuntService(BaseService):
     def build_new_users(comments):
         new_users = [ExternalSystemUserDetailsModel(
             external_id=comment.node.user.id,
-            source_id=2,
+            source_system_id=2,
             screen_name=comment.node.user.username,
             description=None,
             profile_image_url=comment.node.user.profileImage,
@@ -96,14 +95,12 @@ class ProductHuntCrud(BaseCRUD):
             instance = self.db.execute(query).scalar_one_or_none()
             if instance is None:
                 self.db.add(mention)
+                self.db.commit()
 
-        self.db.commit()
-
-    def create_user_not_exists_external_id(self, users:  List[ExternalSystemUserDetailsModel]):
+    def create_user_not_exists_external_id(self, users: List[ExternalSystemUserDetailsModel]):
         for user in users:
             query = select(ExternalSystemUserDetailsModel).filter_by(external_id=user.external_id)
             instance = self.db.execute(query).scalar_one_or_none()
             if instance is None:
                 self.db.add(user)
-
-        self.db.commit()
+                self.db.commit()

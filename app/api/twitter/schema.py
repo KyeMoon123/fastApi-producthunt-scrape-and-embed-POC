@@ -30,10 +30,10 @@ class TwitterMentionDTO(BaseModel):
         self.metadata = kwargs["metadata"]
         self.user = kwargs["user"]
 
-    created_at: datetime
+    created_at: str
     id: str
     full_text: str
-    metadata: object
+    metadata: dict = None
     user: TwitterUser
 
     class Config:
