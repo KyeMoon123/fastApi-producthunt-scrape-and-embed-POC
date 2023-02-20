@@ -66,7 +66,7 @@ ITEM_PIPELINES = {
     "producthuntscraper.pipelines.ProducthuntscraperPipeline": 300,
 }
 
-CONNECTION_STRING = "postgresql://postgres:QpgJNFgSHoo6EXEHbPci@containers-us-west-57.railway.app:5675/railway"
+CONNECTION_STRING = "postgresql://postgres:uhRxzOoDULjT6atngwyJ@containers-us-west-75.railway.app:6469/railway"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

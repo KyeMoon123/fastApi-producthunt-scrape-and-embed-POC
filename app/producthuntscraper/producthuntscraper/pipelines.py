@@ -2,18 +2,18 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+
 import sys
 
 from sqlalchemy.ext.declarative import declarative_base
-sys.path.append('/app')
 # useful for handling different item types with a single interface
-from services.main import BaseCRUD
+from app.services.main import BaseCRUD
 from scrapy.utils.project import get_project_settings
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from db.models.mention_model import MentionModel
-from db.models.external_system_user_details import ExternalSystemUserDetailsModel
+from app.db.models.mention_model import MentionModel
+from app.db.models.external_system_user_details import ExternalSystemUserDetailsModel
 
 Base = declarative_base()
 class ProducthuntscraperPipeline(BaseCRUD):
@@ -31,7 +31,7 @@ class ProducthuntscraperPipeline(BaseCRUD):
         # add User
         user = ExternalSystemUserDetailsModel()
         user.external_id = item["user_id"][0]
-        user.source_id = 2
+        user.source_system_id = 2
         user.screen_name = item["user_screen_name"][0]
         user.description = None
         user.profile_image_url = item["profile_image_url"][0]
@@ -39,7 +39,7 @@ class ProducthuntscraperPipeline(BaseCRUD):
         # add Mention
         mention = MentionModel()
         mention.external_id = item["external_id"][0]
-        mention.source_id = 2,
+        mention.source_system_id = 2,
         mention.full_text = item["full_text"][0]
         mention.external_user_id = item["user_id"][0]
 
