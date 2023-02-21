@@ -19,6 +19,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app/api/monitoring" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/api/product_hunt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/api/twitter" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/api/mentions" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (fictional-carnival)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

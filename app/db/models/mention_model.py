@@ -20,6 +20,6 @@ class MentionModel(Base):
     source_system_id: Mapped[int] = mapped_column(ForeignKey("source_system.id"))
     source_system: Mapped["SourceSystem"] = relationship(back_populates="mentions")
     full_text: Mapped[str] = mapped_column(String)
-    external_user_id: Mapped[str] = mapped_column(ForeignKey("external_system_user.id"), nullable=True)
+    external_user_id: Mapped[str] = mapped_column(ForeignKey("external_system_user.external_id"), nullable=True)
     external_user: Mapped["ExternalSystemUserDetailsModel"] = relationship(back_populates="mentions")
     new: Mapped[bool] = mapped_column(Boolean, default=True)
